@@ -41,6 +41,7 @@ def random_numbers(board, board_size):
 def moving_up(board, directions, board_size):
     for i in range(board_size):
         for j in range(board_size):
+            # moving numbers up:
             # row_1_up(board, directions, board_size)
             if board[0][j] == " ":
                 board[0][j] = board[1][j]
@@ -56,15 +57,16 @@ def moving_up(board, directions, board_size):
             if board[2][j] == " ":
                 board[2][j] = board[3][j]
                 board[3][j] = " "
+            # doubles values (numbers) if they are equal, and moves the following numbers up: 
             if i > 0:
                 if board[i][j] == board[i - 1][j] and board[i - 1][j] != " ": 
-                    board[i - 1][j] *= 2  # bug: if row0 == row2 AND row3 == row4, then row3 won't be doubled!!!
+                    board[i - 1][j] *= 2  # doubles numbers if they are equal. Bug: if row0 == row2 AND row3 == row4, then row3 won't be doubled!!!
                     board[i][j] = " "
                     if i < (board_size - 1):
-                        board[i][j] = board[i + 1][j]
+                        board[i][j] = board[i + 1][j]  # moves the following numbers up
                         board[i + 1][j] = " "
                     else:
-                        board[i][j] = " "
+                        board[i][j] = " "  # empty last row
     # os.system("clear")
     end_of_game(board, directions, board_size)  
     return
@@ -73,13 +75,13 @@ def moving_up(board, directions, board_size):
 def moving_down(board, directions, board_size):
     for i in range(board_size - 1, -1, -1):
         for j in range(board_size):
-            # row_0_down(board, directions, board_size)
+            # row_4_down(board, directions, board_size)
             if board[3][j] == " ":
                 board[3][j] = board[2][j]
                 board[2][j] = board[1][j]
                 board[1][j] = board[0][j]
                 board[0][j] = " "
-            # row_1_down(board, directions, board_size)
+            # row_3_down(board, directions, board_size)
             if board[2][j] == " ":
                 board[2][j] = board[1][j]
                 board[1][j] = board[0][j]
@@ -105,18 +107,18 @@ def moving_down(board, directions, board_size):
 def moving_left(board, directions, board_size):
     for i in range(board_size):
         for j in range(board_size):
-            # row_1_left(board, directions, board_size)
+            # column_2_left(board, directions, board_size)
             if board[i][0] == " ":
                 board[i][0] = board[i][1]
                 board[i][1] = board[i][2]
                 board[i][2] = board[i][3]
                 board[i][3] = " "
-            # row_2_left(board, directions, board_size)
+            # column_3_left(board, directions, board_size)
             if board[i][1] == " ":
                 board[i][1] = board[i][2]
                 board[i][2] = board[i][3]
                 board[i][3] = " "
-            # row_3_left(board, directions, board_size)
+            # column_4_left(board, directions, board_size)
             if board[i][2] == " ":
                 board[i][2] = board[i][3]
                 board[i][3] = " "
@@ -135,7 +137,35 @@ def moving_left(board, directions, board_size):
 
 
 def moving_right(board, directions, board_size):
-    pass
+    for i in range(board_size):
+        for j in range(board_size, -1, -1):
+            # column_3_right(board, directions, board_size)
+            if board[i][3] == " ":
+                board[i][3] = board[i][2]
+                board[i][2] = board[i][1]
+                board[i][1] = board[i][0]
+                board[i][0] = " "
+            # column_2_right(board, directions, board_size)
+            if board[i][2] == " ":
+                board[i][2] = board[i][1]
+                board[i][1] = board[i][0]
+                board[i][0] = " "
+            # column_1_right(board, directions, board_size)
+            if board[i][1] == " ":
+                board[i][1] = board[i][0]
+                board[i][0] = " "
+            if j < 3:
+                if board[i][j] == board[i][j + 1] and board[i][j + 1] != " ":
+                    board[i][j + 1] *= 2
+                    board[i][j] = " "
+                    if j > 0:
+                        board[i][j] = board[i][j - 1]
+                        board[i][j - 1] = " "
+                    else:
+                        board[i][j] = " "
+    # os.system("clear")
+    end_of_game(board, directions, board_size)  
+    return
 
 
 def end_of_game(board, directions, board_size):      
@@ -154,7 +184,7 @@ def end_of_game(board, directions, board_size):
                 if board[i][j] == board[i][j - 1] or board[i][j] == board[i][j + 1]:
                     moving_on_board(board, directions, board_size)
         for i in range(1, board_size - 2):
-            for j in (board_size):
+            for j in (board_size):  # TypeError: 'int' object is not iterable -> ???
                 if board[i][j] == board[i - 1][j] or board[i][j] == board[i + 1][j]:
                     moving_on_board(board, directions, board_size)
                 else:
@@ -173,7 +203,7 @@ def moving_on_board(board, directions, board_size):
         elif direction == "l":
             moving_left(board, directions, board_size)
         elif direction == "r":
-            end_of_game(board, directions, board_size)
+            moving_right(board, directions, board_size)
         else:
             print("Please enter an available direction")
             continue
