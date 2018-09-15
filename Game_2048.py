@@ -21,13 +21,13 @@ def print_board(board_size, board):
     return
 
 
-def coordinate_is_available():
+def board_in_one_list():
     pass
 
 
 def random_numbers(board, board_size):
     available_numbers = [2, 2, 2, 2, 2, 2, 2, 4, 4, 4]
-    random_numbers = random.choice(available_numbers)  
+    random_numbers = random.choice(available_numbers)
     available = False
     while available is False:
         random_x = random.randint(0, 3)
@@ -90,7 +90,7 @@ def moving_down(board, directions, board_size):
             if board[1][j] == " ":
                 board[1][j] = board[0][j]
                 board[0][j] = " "
-            if i < 3:
+            elif i < 3:
                 if board[i][j] == board[i + 1][j] and board[i + 1][j] != " ": 
                     board[i + 1][j] *= 2  # bug: if row0 == row2 AND row3 == row4, then row3 won't be doubled!!!
                     board[i][j] = " "
@@ -184,13 +184,14 @@ def end_of_game(board, directions, board_size):
                 if board[i][j] == board[i][j - 1] or board[i][j] == board[i][j + 1]:
                     moving_on_board(board, directions, board_size)
         for i in range(1, board_size - 2):
-            for j in (board_size):  # TypeError: 'int' object is not iterable -> ???
+            for j in range(board_size):  # TypeError: 'int' object is not iterable -> ???
                 if board[i][j] == board[i - 1][j] or board[i][j] == board[i + 1][j]:
                     moving_on_board(board, directions, board_size)
                 else:
                     print_board(board_size, board)
                     print("End of game")
                     exit()
+
 
 
 def moving_on_board(board, directions, board_size):
