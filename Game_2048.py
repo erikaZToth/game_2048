@@ -54,20 +54,29 @@ def row_3_up(board, directions, board_size):
     pass
 
 
-def win_condition(board, directions, board_size):  # player reached 2048
+def end_of_game(board, directions, board_size):      
     board_in_one_list = board[0] + board[1] + board[2] + board[3]
     board_in_one_list = [0 if i == " " else i for i in board_in_one_list]
     maximum_value = max(board_in_one_list)
-    print("max: ", maximum_value)
-    if maximum_value >= 2048:
+    # player reached 2048?
+    if maximum_value >= 64:
+        print_board(board_size, board)
         print("Congratulations! You've reached 2048")  
         exit()
-
-
-def end_of_game():  # if table is plenty or if win_condition() is True
-    # print_board(board_size, board)
-    # print("")
-    pass
+    # can we make steps?
+    if 0 not in board_in_one_list:
+        for i in range(board_size):
+            for j in (1, board_size - 2):
+                if board[i][j] == board[i][j - 1] or board[i][j] == board[i][j + 1]:
+                    moving_on_board(board, directions, board_size)
+        for i in range(1, board_size - 2):
+            for j in (board_size):
+                if board[i][j] == board[i - 1][j] or board[i][j] == board[i + 1][j]:
+                    moving_on_board(board, directions, board_size)
+                else:
+                    print_board(board_size, board)
+                    print("End of game")
+                    exit()
 
 
 def moving_on_board(board, directions, board_size):
@@ -100,14 +109,14 @@ def moving_on_board(board, directions, board_size):
                                 board[i + 1][j] = " "
                             else:
                                 board[i][j] = " "
-            win_condition(board, directions, board_size)                  
             # os.system("clear")
+            end_of_game(board, directions, board_size)                              
         elif direction == "d":
-            print("Lomeee")
+            end_of_game(board, directions, board_size)
         elif direction == "l":
-            print("Kuttykurutty")
+            end_of_game(board, directions, board_size)
         elif direction == "r":
-            print("Hahaha")
+            end_of_game(board, directions, board_size)
         else:
             print("Please enter an available direction")
             continue
@@ -124,7 +133,7 @@ def main():
         random_numbers(board, board_size)
     print_board(board_size, board)
     moving_on_board(board, directions, board_size)
-    # if win_condition(board, directions, board_size) is True:
+    # if end_of_game(board, directions, board_size) is True:
     #    exit()
     pass
 
