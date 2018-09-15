@@ -38,10 +38,6 @@ def random_numbers(board, board_size):
     return random_numbers
 
 
-def jump_to_next_available_cell():
-    pass
-
-
 def moving_up(board, directions, board_size):
     for i in range(board_size):
         for j in range(board_size):
@@ -107,7 +103,35 @@ def moving_down(board, directions, board_size):
 
 
 def moving_left(board, directions, board_size):
-    pass
+    for i in range(board_size):
+        for j in range(board_size):
+            # row_1_left(board, directions, board_size)
+            if board[i][0] == " ":
+                board[i][0] = board[i][1]
+                board[i][1] = board[i][2]
+                board[i][2] = board[i][3]
+                board[i][3] = " "
+            # row_2_left(board, directions, board_size)
+            if board[i][1] == " ":
+                board[i][1] = board[i][2]
+                board[i][2] = board[i][3]
+                board[i][3] = " "
+            # row_3_left(board, directions, board_size)
+            if board[i][2] == " ":
+                board[i][2] = board[i][3]
+                board[i][3] = " "
+            if j > 0:
+                if board[i][j] == board[i][j - 1] and board[i][j - 1] != " ": 
+                    board[i][j - 1] *= 2  # bug: if column0 == column2 AND column3 == column4, then column3 won't be doubled!!!
+                    board[i][j] = " "
+                    if j < (board_size - 1):
+                        board[i][j] = board[i][j + 1]
+                        board[i][j + 1] = " "
+                    else:
+                        board[i][j] = " "
+    # os.system("clear")
+    end_of_game(board, directions, board_size)  
+    return
 
 
 def moving_right(board, directions, board_size):
@@ -119,9 +143,9 @@ def end_of_game(board, directions, board_size):
     board_in_one_list = [0 if i == " " else i for i in board_in_one_list]
     maximum_value = max(board_in_one_list)
     # player reached 2048?
-    if maximum_value >= 16:
+    if maximum_value >= 2048:
         print_board(board_size, board)
-        print("Congratulations! You've reached 2048!!! :)")  
+        print("CONGRATULATIONS! YOU'VE REACHED 2048!!! :)")  
         exit()
     # can we make any further steps?
     if 0 not in board_in_one_list:
@@ -147,7 +171,7 @@ def moving_on_board(board, directions, board_size):
         elif direction == "d":
             moving_down(board, directions, board_size)
         elif direction == "l":
-            end_of_game(board, directions, board_size)
+            moving_left(board, directions, board_size)
         elif direction == "r":
             end_of_game(board, directions, board_size)
         else:
